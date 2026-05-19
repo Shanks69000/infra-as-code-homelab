@@ -1,0 +1,124 @@
+---
+- name: Installation et configuration des bases de données
+  hosts: db_servers
+  become: true
+
+  vars:
+    postgres_version: "16"
+    postgres_databases:
+      - n8n
+      - patchmon
+      - odoo
+      - bunkerweb
+    postgres_user: dbadmin
+    postgres_password: "Sp4rti4te!$"
+    mariadb_databases:
+      - sync_in
+    mariadb_root_password: "Sp4rti4te!$"
+
+  tasks:
+    - name: Installation des dépendances
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - python3-psycopg2
+          - python3-pymysql
+          - acl
+        update_cache: true
+        state: present
+
+    - name: Clé GPG PostgreSQL
+      get_url:
+        url: https://www.postgresql.org/media/keys/ACCC4CF8.asc
+        dest: /usr/share/keyrings/postgresql.asc
+        mode: '0644'
+
+    - name: Repo PostgreSQL
+      apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/postgresql.asc] https://apt.postgresql.org/pub/repos/apt bookworm-pgdg main"
+        filename: postgresql
+        state: present
+
+    - name: Installation PostgreSQL
+      apt:
+        name: "postgresql-{{ postgres_version }}"
+        update_cache: true
+        state: present
+
+    - name: Démarrage PostgreSQL
+      systemd:
+        name: postgresql
+        state: started
+        enabled: true
+
+    - name: Création user et bases PostgreSQL
+      shell: |
+        sudo -u postgres psql -tc "SELECT 1 FROM pg_roles WHERE rolname='{{ postgres_user }}'" | grep -q 1 || \
+        sudo -u postgres psql -c "CREATE USER {{ postgres_user }} WITH PASSWORD '{{ postgres_password }}' CREATEDB;"
+        {% for db in postgres_databases %}
+        sudo -u postgres psql -tc "SELECT 1 FROM pg_database WHERE datname='{{ db }}'" | grep -q 1 || \
+        sudo -u postgres psql -c "CREATE DATABASE {{ db }} OWNER {{ postgres_user }};"
+        {% endfor %}
+      args:
+        executable: /bin/bash
+
+    - name: Autoriser connexions externes PostgreSQL
+      lineinfile:
+        path: "/etc/postgresql/{{ postgres_version }}/main/postgresql.conf"
+        regexp: "^#?listen_addresses"
+        line: "listen_addresses = '*'"
+
+    - name: Autoriser réseau K8s dans pg_hba.conf
+      blockinfile:
+        path: "/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf"
+        block: |
+          host    all             {{ postgres_user }}      10.10.1.0/24            scram-sha-256
+          host    all             {{ postgres_user }}      10.10.0.0/24            scram-sha-256
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+
+    - name: Redémarrage PostgreSQL
+      systemd:
+        name: postgresql
+        state: restarted
+
+    - name: Installation MariaDB
+      apt:
+        name:
+          - mariadb-server
+          - mariadb-client
+        state: present
+
+    - name: Démarrage MariaDB
+      systemd:
+        name: mariadb
+        state: started
+        enabled: true
+
+    - name: Mot de passe root MariaDB
+      mysql_user:
+        name: root
+        password: "{{ mariadb_root_password }}"
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        state: present
+
+    - name: Création des bases MariaDB
+      mysql_db:
+        name: "{{ item }}"
+        login_user: root
+        login_password: "{{ mariadb_root_password }}"
+        state: present
+      loop: "{{ mariadb_databases }}"
+
+    - name: Autoriser connexions externes MariaDB
+      lineinfile:
+        path: /etc/mysql/mariadb.conf.d/50-server.cnf
+        regexp: "^bind-address"
+        line: "bind-address = 0.0.0.0"
+
+    - name: Redémarrage MariaDB
+      systemd:
+        name: mariadb
+        state: restarted

@@ -1,0 +1,54 @@
+---
+- name: Installation K3s master
+  hosts: k8s_master
+  become: true
+
+  tasks:
+    - name: Installation K3s server
+      shell: |
+        curl -sfL https://get.k3s.io | sh -s - server \
+          --cluster-init \
+          --disable traefik \
+          --node-ip {{ ansible_host }}
+      args:
+        creates: /usr/local/bin/k3s
+
+    - name: Attendre que K3s soit pret
+      wait_for:
+        path: /var/lib/rancher/k3s/server/node-token
+        timeout: 60
+
+    - name: Recuperer le node-token
+      slurp:
+        src: /var/lib/rancher/k3s/server/node-token
+      register: k3s_token
+
+    - name: Recuperer le kubeconfig
+      slurp:
+        src: /etc/rancher/k3s/k3s.yaml
+      register: kubeconfig
+
+- name: Installation K3s workers
+  hosts: k8s_workers
+  become: true
+
+  tasks:
+    - name: Installation K3s agent
+      shell: |
+        curl -sfL https://get.k3s.io | sh -s - agent \
+          --server https://{{ hostvars['k8s-master']['ansible_host'] }}:6443 \
+          --token {{ hostvars['k8s-master']['k3s_token']['content'] | b64decode | trim }}
+      args:
+        creates: /usr/local/bin/k3s
+
+- name: Recuperer le kubeconfig sur le host local
+  hosts: k8s_master
+  become: true
+
+  tasks:
+    - name: Copier kubeconfig en local
+      fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: ~/.kube/k3s-lab.yaml
+        flat: true
+

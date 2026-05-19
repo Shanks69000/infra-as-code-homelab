@@ -1,0 +1,49 @@
+# playbook-proxmox-postinstall.yml
+# Ce playbook suppose que Proxmox VE est installé et accessible en SSH en root
+
+- name: Configurer Proxmox post-install
+  hosts: proxmox
+  become: false
+  gather_facts: true
+
+  tasks:
+    - name: Mettre à jour les paquets (apt)
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: dist
+        cache_valid_time: 3600
+
+    - name: Installer paquets utiles example qemu-guest-agent pour meilleure intégration
+      ansible.builtin.apt:
+        name:
+          - qemu-guest-agent
+          - sudo
+        state: present
+
+    - name: Configurer l'interface réseau statique (Debian/Proxmox 8 utilisant systemd-networkd/netplan?)
+      ansible.builtin.shell: |
+        cat > /etc/network/interfaces.d/50-eth0.cfg <<'EOF'
+        auto eth0
+        iface eth0 inet static
+          address {{ ansible_host }}
+          netmask 255.255.255.0
+          gateway 10.138.90.1
+        EOF
+      args:
+        executable: /bin/bash
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Proxmox'
+
+    - name: Redémarrer le réseau (si nécessaire)
+      ansible.builtin.service:
+        name: networking
+        state: restarted
+      ignore_errors: yes
+
+    - name: Ajouter clef SSH admin (exemple)
+      ansible.builtin.debug:
+        msg: "Ajoutez votre clef publique ici si vous désirez désactiver le mot de passe."
+
+    - name: Reboot à la fin pour s'assurer que tout est propre
+      ansible.builtin.reboot:
+        msg: "Reboot après post-install Ansible"
+        timeout: 600

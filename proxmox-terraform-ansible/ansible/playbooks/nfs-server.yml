@@ -1,0 +1,42 @@
+---
+- name: Configuration NFS server
+  hosts: db_servers
+  become: true
+
+  tasks:
+    - name: Installation NFS server
+      apt:
+        name: nfs-kernel-server
+        state: present
+
+    - name: Création des répertoires NFS
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0777'
+        owner: nobody
+        group: nogroup
+      loop:
+        - /mnt/nfs/k8s-data
+        - /mnt/nfs/k8s-data/n8n
+        - /mnt/nfs/k8s-data/jellyfin
+        - /mnt/nfs/k8s-data/stirling-pdf
+        - /mnt/nfs/k8s-data/fossflow
+        - /mnt/nfs/k8s-data/homer
+        - /mnt/nfs/k8s-data/sync-in
+
+    - name: Configuration exports NFS
+      blockinfile:
+        path: /etc/exports
+        block: |
+          /mnt/nfs/k8s-data 10.10.1.0/24(rw,sync,no_subtree_check,no_root_squash)
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+
+    - name: Application des exports
+      command: exportfs -ra
+
+    - name: Démarrage NFS
+      systemd:
+        name: nfs-kernel-server
+        state: started
+        enabled: true

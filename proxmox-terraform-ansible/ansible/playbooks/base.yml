@@ -1,0 +1,45 @@
+---
+- name: Configuration de base OS
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Mise a jour des paquets
+      apt:
+        update_cache: true
+        upgrade: dist
+        cache_valid_time: 3600
+
+    - name: Installation des paquets de base
+      apt:
+        name:
+          - curl
+          - wget
+          - vim
+          - htop
+          - git
+          - ca-certificates
+          - gnupg
+          - qemu-guest-agent
+          - sudo
+        state: present
+
+    - name: Demarrage et activation de qemu-guest-agent
+      systemd:
+        name: qemu-guest-agent
+        state: started
+        enabled: true
+
+    - name: Configuration du timezone
+      timezone:
+        name: Europe/Paris
+
+    - name: Desactivation du swap
+      command: swapoff -a
+      when: ansible_swaptotal_mb > 0
+
+    - name: Suppression du swap dans fstab
+      lineinfile:
+        path: /etc/fstab
+        regexp: '^\s*[^#].*\sswap\s'
+        state: absent
