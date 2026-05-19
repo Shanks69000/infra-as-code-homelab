@@ -36,4 +36,18 @@ resource "proxmox_virtual_environment_vm" "this" {
     agent {
     enabled = true
     }
+    initialization {
+      ip_config {
+        ipv4 {
+          address = var.ip_address
+          gateway = var.gateway
+        }
+      }
+      user_account {
+        username = var.ci_user
+        keys     = [var.ssh_public_key]
+      }
+    }
+  boot_order = ["scsi0"]
+  on_boot = false
 }
