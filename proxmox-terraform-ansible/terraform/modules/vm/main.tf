@@ -6,33 +6,33 @@ resource "proxmox_virtual_environment_vm" "this" {
   node_name  = var.node_name
   tags       = var.tags
 
-    # Bloc suivant — le clone du template
+    # Bloc le clone du template
     clone {
     vm_id = var.template_id
     full  = true
     }
-    # Bloc suivant — le CPU 
+    # Bloc le CPU 
     cpu {
     cores = var.cores
     type = "x86-64-v2-AES"
     }
-    # Bloc suivant — la mémoire
+    # Bloc la mémoire
     memory {
     dedicated = var.memory_mb
     }
-    # Bloc suivant — le disque 
+    # Bloc le disque 
     disk {
     datastore_id = var.datastore
     interface = "scsi0"
     size = var.disk_size_gb
     file_format = "raw"
     }
-    # Bloc suivant — la carte réseau
+    # Bloc la carte réseau
     network_device {
     bridge = "vmbr0"
     model = "virtio"
     }
-    # Bloc suivant — le guest agent
+    # Bloc le guest agent
     agent {
       enabled = true
       timeout = "1m"

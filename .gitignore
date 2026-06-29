@@ -10,21 +10,25 @@ proxmox-terraform-ansible/terraform_old/
 .terraform.lock.hcl
 
 # Secrets K8s (values avec credentials)
-**/authentik-values.yaml
-**/gitea-values.yaml
+**/authentik.yml
+**/gitea.yml
 **/vaultwarden.yml
 **/stirling-pdf.yml
 **/woodpecker.yml
+**/kube-prometheus.yml
 
 # Inventaire Ansible (IPs, users)
-ansible/inventory/hosts.yml
-ansible/inventory.ini
+**/inventory/hosts.yml
+**/inventory.ini
+
+# Secrets Ansible
+**/group_vars/all/vault.yml
 
 # Cles SSH
 *.pem
 *.key
 id_rsa*
 
-# fichiers exemples exclus
-!*.tfvars.example
-!**/*-values.yaml.example
+# Exceptions - les modeles restent visibles
+!*.example
+!**/*.example

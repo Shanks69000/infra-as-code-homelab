@@ -1,0 +1,47 @@
+gitea:
+  admin:
+    username: "CHANGEME"
+    password: "CHANGEME"
+    email: "admin@lab.local"
+  config:
+    database:
+      DB_TYPE: postgres
+      HOST: "10.x.x.x:5432"
+      NAME: gitea
+      USER: dbadmin
+      PASSWD: "CHANGEME"
+    server:
+      DOMAIN: gitea.lab.local
+      ROOT_URL: "http://gitea.lab.local"
+      HTTP_PORT: 3000
+    session:
+      PROVIDER: db
+    cache:
+      ADAPTER: memory
+    queue:
+      TYPE: level
+
+postgresql:
+  enabled: false
+
+postgresql-ha:
+  enabled: false
+
+redis-cluster:
+  enabled: false
+
+persistence:
+  enabled: true
+  storageClass: nfs
+  size: 10Gi
+
+ingress:
+  enabled: true
+  className: traefik
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+  hosts:
+    - host: gitea.lab.local
+      paths:
+        - path: /
+          pathType: Prefix

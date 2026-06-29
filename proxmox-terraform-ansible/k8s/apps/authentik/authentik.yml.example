@@ -1,0 +1,32 @@
+authentik:
+  secret_key: "CHANGEME-generer-une-cle-aleatoire"
+  postgresql:
+    host: "10.x.x.x"
+    name: "authentik"
+    user: "dbadmin"
+    password: "CHANGEME"
+    port: 5432
+  redis:
+    host: "authentik-redis-master"
+    port: 6379
+
+postgresql:
+  enabled: false
+
+redis:
+  enabled: true
+
+server:
+  ingress:
+    enabled: true
+    ingressClassName: traefik
+    annotations:
+      traefik.ingress.kubernetes.io/router.entrypoints: web
+    hosts:
+      - authentik.lab.local
+    paths:
+      - /
+    pathType: Prefix
+
+worker:
+  replicas: 1

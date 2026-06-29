@@ -11,10 +11,10 @@
       - odoo
       - bunkerweb
     postgres_user: dbadmin
-    postgres_password: "Sp4rti4te!$"
+    postgres_password: "{{ vault_postgres_password }}"
     mariadb_databases:
       - sync_in
-    mariadb_root_password: "Sp4rti4te!$"
+    mariadb_root_password: "{{ vault_mariadb_root_password }}"
 
   tasks:
     - name: Installation des dépendances

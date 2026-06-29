@@ -36,14 +36,14 @@ return 1
 }
 
 
-hosts=("10.138.90.16" "10.138.90.17" "10.138.90.18")
+hosts=("10.x.x.16" "10.x.x.17" "10.x.x.18")
 for h in "${hosts[@]}"; do
 wait_for_ssh "$h" || echo "Attention: $h ne répond pas sur le port 22. Installez Proxmox ou vérifiez la config.";
 done
 
 
 echo "Lancement d'Ansible playbook..."
-ansible-playbook -i inventory.ini playbook-proxmox-postinstall.yml --extra-vars "ansible_become_password=azerty1*"
+ansible-playbook -i inventory.ini playbook-proxmox-postinstall.yml --ask-become-pass
 
 
 echo "Terminé."

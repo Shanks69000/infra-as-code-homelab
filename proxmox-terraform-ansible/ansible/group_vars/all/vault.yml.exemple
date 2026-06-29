@@ -1,0 +1,3 @@
+# idéalement utiliser password store
+vault_postgres_password: "CHANGEME"
+vault_mariadb_root_password: "CHANGEME"

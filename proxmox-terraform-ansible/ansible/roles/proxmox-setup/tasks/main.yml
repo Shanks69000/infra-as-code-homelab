@@ -1,2 +1,2 @@
-# role tasks - utilisé si vous préférez une structure role-based
+# role tasks
 - include_tasks: ../../playbook-proxmox-postinstall.yml
