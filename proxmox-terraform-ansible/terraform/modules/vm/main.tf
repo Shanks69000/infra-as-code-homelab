@@ -14,7 +14,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     # Bloc suivant — le CPU 
     cpu {
     cores = var.cores
-    type = "x86_64-v2-AES"
+    type = "x86-64-v2-AES"
     }
     # Bloc suivant — la mémoire
     memory {
@@ -22,7 +22,7 @@ resource "proxmox_virtual_environment_vm" "this" {
     }
     # Bloc suivant — le disque 
     disk {
-    datastore = var.datastore
+    datastore_id = var.datastore
     interface = "scsi0"
     size = var.disk_size_gb
     file_format = "raw"
@@ -34,7 +34,9 @@ resource "proxmox_virtual_environment_vm" "this" {
     }
     # Bloc suivant — le guest agent
     agent {
-    enabled = true
+      enabled = true
+      timeout = "1m"
+      trim    = false
     }
     initialization {
       ip_config {
@@ -45,9 +47,11 @@ resource "proxmox_virtual_environment_vm" "this" {
       }
       user_account {
         username = var.ci_user
-        keys     = [var.ssh_public_key]
+        keys     = [var.ssh_key]
       }
     }
   boot_order = ["scsi0"]
   on_boot = false
+  started = var.started
+  description = var.description
 }

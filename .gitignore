@@ -1,0 +1,27 @@
+# Dossier obsolete
+proxmox-terraform-ansible/terraform_old/
+
+# Secrets Terraform
+*.tfvars
+*.tfstate
+*.tfstate.backup
+**/info_token
+.terraform/
+.terraform.lock.hcl
+
+# Secrets K8s (values avec credentials)
+**/authentik-values.yaml
+**/gitea-values.yaml
+**/vaultwarden.yml
+**/stirling-pdf.yml
+**/woodpecker.yml
+
+# Inventaire Ansible (IPs, users)
+ansible/inventory/hosts.yml
+ansible/inventory.ini
+
+# Cles SSH
+*.pem
+*.key
+id_rsa*
+<< 'EOF' > terraform.tfvars.example proxmox_endpoint = https://VOTRE_IP_PROXMOX:8006/ proxmox_token = user@pve!token-name=VOTRE_TOKEN_SECRET ssh_public_key = ssh-ed25519 AAAAC3... votre-cle template_id = 9000 gateway = 10.10.1.1 EOF.tfvars.example

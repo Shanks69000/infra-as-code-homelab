@@ -72,4 +72,16 @@ variable "tags" {
     description = "Tags Proxmox pour organiser les VMs (ex: ['web', 'production'])"
     type        = list(string)
     default     = []
+} 
+# Bloc 14 — Démarrer la VM après création
+variable "started" {
+  description = "Demarrer la VM apres creation"
+  type        = bool
+  default     = true
+}
+# Bloc 15 description
+variable "description" {
+  description = "Description de la VM dans Proxmox"
+  type        = string
+  default     = ""
 }

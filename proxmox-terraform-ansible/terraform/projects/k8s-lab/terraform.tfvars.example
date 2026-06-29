@@ -1,0 +1,5 @@
+proxmox_endpoint = "https://VOTRE_IP_PROXMOX:8006/"
+proxmox_token    = "user@pve!token-name=VOTRE_TOKEN_SECRET"
+ssh_public_key   = "ssh-ed25519 AAAAC3... votre-cle"
+template_id      = 9000
+gateway          = "10.10.1.1"
