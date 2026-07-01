@@ -1,34 +1,29 @@
-# Dossier obsolete
-proxmox-terraform-ansible/terraform_old/
-
-# Secrets Terraform
+# Terraform
 *.tfvars
+!*.tfvars.example
 *.tfstate
 *.tfstate.backup
-**/info_token
 .terraform/
 .terraform.lock.hcl
 
-# Secrets K8s (values avec credentials)
-**/authentik.yml
-**/gitea.yml
-**/vaultwarden.yml
-**/stirling-pdf.yml
-**/woodpecker.yml
-**/kube-prometheus.yml
+# Ansible secrets
+ansible/group_vars/all/vault.yml
+ansible/inventory/hosts.yml
+ansible/inventory.ini
 
-# Inventaire Ansible (IPs, users)
-**/inventory/hosts.yml
-**/inventory.ini
+# K8s secrets (values avec credentials)
+kubernetes/apps/authentik/authentik.yml
+kubernetes/apps/gitea/gitea.yml
+kubernetes/apps/vaultwarden/vaultwarden.yml
+kubernetes/apps/stirling-pdf/stirling-pdf.yml
+kubernetes/apps/woodpecker/woodpecker.yml
+kubernetes/monitoring/kube-prometheus.yml
 
-# Secrets Ansible
-**/group_vars/all/vault.yml
-
-# Cles SSH
+# Clés SSH
 *.pem
 *.key
 id_rsa*
 
-# Exceptions - les modeles restent visibles
-!*.example
-!**/*.example
+# Divers
+info_token
+terraform_old/
