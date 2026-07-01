@@ -4,6 +4,7 @@ Provisionnement et configuration automatisés d'un homelab Proxmox VE hébergean
 
 ## Architecture
 Proxmox VE (hyperviseur)
+```
 ├── bastion          (10.10.1.11)  — point d'entrée SSH
 ├── k8s-master       (10.10.1.20)  — control plane K3s
 ├── k8s-worker1      (10.10.1.21)  — worker node
@@ -13,7 +14,7 @@ Proxmox VE (hyperviseur)
 └──► Cluster K3s
 ├── apps/       Homer, Gitea, IT-Tools, Authentik, Vaultwarden, Woodpecker CI
 └── monitoring/ kube-prometheus-stack (Grafana)
-
+```
 ## Stack technique
 
 | Couche | Outils |
@@ -25,6 +26,7 @@ Proxmox VE (hyperviseur)
 | Scripting | Bash (orchestration deploy) |
 
 ## Structure du projet
+```
 .
 ├── terraform/
 │   ├── modules/vm/          # Module réutilisable — VM Proxmox (clone, CPU, RAM, disk, cloud-init)
@@ -44,6 +46,7 @@ Proxmox VE (hyperviseur)
 │   └── monitoring/           # kube-prometheus-stack
 └── scripts/
 └── deploy_all.sh         # Terraform apply → wait SSH → Ansible playbook
+```
 
 ## Workflow de déploiement
 
