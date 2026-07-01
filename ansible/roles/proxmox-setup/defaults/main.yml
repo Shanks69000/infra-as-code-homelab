@@ -1,0 +1,5 @@
+---
+proxmox_gateway: "10.10.1.1"
+proxmox_netmask: "255.255.255.0"
+proxmox_admin_user: "root"
+# proxmox_ssh_public_key: "ssh-ed25519 AAAAC3..."

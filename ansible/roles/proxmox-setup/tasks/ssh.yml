@@ -1,0 +1,7 @@
+---
+- name: Déployer la clé SSH admin
+  ansible.builtin.authorized_key:
+    user: "{{ proxmox_admin_user }}"
+    key: "{{ proxmox_ssh_public_key }}"
+    state: present
+  when: proxmox_ssh_public_key is defined

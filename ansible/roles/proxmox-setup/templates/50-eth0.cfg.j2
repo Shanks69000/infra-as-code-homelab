@@ -1,0 +1,5 @@
+auto eth0
+iface eth0 inet static
+  address {{ ansible_host }}
+  netmask {{ proxmox_netmask | default("255.255.255.0") }}
+  gateway {{ proxmox_gateway }}

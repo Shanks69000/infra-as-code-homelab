@@ -1,0 +1,13 @@
+---
+- name: Mettre à jour les paquets
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: dist
+    cache_valid_time: 3600
+
+- name: Installer paquets de base
+  ansible.builtin.apt:
+    name:
+      - qemu-guest-agent
+      - sudo
+    state: present

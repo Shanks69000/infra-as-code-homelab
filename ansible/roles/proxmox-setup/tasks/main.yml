@@ -1,2 +1,15 @@
 # role tasks
-- include_tasks: ../../playbook-proxmox-postinstall.yml
+---
+- name: Include packages tasks
+  ansible.builtin.include_tasks: packages.yml
+
+- name: Include network tasks
+  ansible.builtin.include_tasks: network.yml
+
+- name: Include ssh tasks
+  ansible.builtin.include_tasks: ssh.yml
+
+- name: Reboot après post-install
+  ansible.builtin.reboot:
+    msg: "Reboot après post-install Ansible"
+    timeout: 600

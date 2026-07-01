@@ -1,0 +1,9 @@
+---
+- name: Configurer l'interface réseau statique
+  ansible.builtin.template:
+    src: 50-eth0.cfg.j2
+    dest: /etc/network/interfaces.d/50-eth0.cfg
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart networking
