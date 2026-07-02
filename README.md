@@ -80,8 +80,8 @@ Ou en une commande via le script d'orchestration :
 
 Les secrets sont externalisés et ne sont **jamais commités** :
 
-- **Terraform** : `terraform.tfvars` (gitignored) — un `.tfvars.example` avec placeholders est fourni
-- **Ansible** : `vault.yml` chiffré via `ansible-vault` — un `.exemple` avec `CHANGEME` est fourni
+- **Terraform** : `terraform.tfvars` (gitignored), un `.tfvars.example` avec placeholders est fourni
+- **Ansible** : `vault.yml` chiffré via `ansible-vault`, un `.exemple` avec `CHANGEME` est fourni
 - **Kubernetes** : les manifests contenant des credentials ont un `.example` associé
 
 En production, j'utiliserais [Sealed Secrets](https://github.com/bitnami-labs/sealed-secrets) ou [External Secrets Operator](https://external-secrets.io/) intégré à HashiCorp Vault.
