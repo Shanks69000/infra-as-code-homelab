@@ -4,17 +4,19 @@ Provisionnement et configuration automatisés d'un homelab Proxmox VE hébergean
 
 ## Architecture
 Proxmox VE (hyperviseur)
-```
-├── bastion          (10.10.1.11)  — point d'entrée SSH
-├── k8s-master       (10.10.1.20)  — control plane K3s
-├── k8s-worker1      (10.10.1.21)  — worker node
-├── k8s-worker2      (10.10.1.22)  — worker node
-└── db-server        (10.10.1.30)  — PostgreSQL 16 + MariaDB + NFS
+
+```bash
+├── bastion          (10.10.1.11)  # point d'entrée SSH
+├── k8s-master       (10.10.1.20)  # control plane K3s
+├── k8s-worker1      (10.10.1.21)  # worker node
+├── k8s-worker2      (10.10.1.22)  # worker node
+└── db-server        (10.10.1.30)  # PostgreSQL 16 + MariaDB + NFS
 │
 └──► Cluster K3s
 ├── apps/       Homer, Gitea, IT-Tools, Authentik, Vaultwarden, Woodpecker CI
 └── monitoring/ kube-prometheus-stack (Grafana)
 ```
+
 ## Stack technique
 
 | Couche | Outils |
@@ -31,7 +33,7 @@ Proxmox VE (hyperviseur)
 ├── docs/
 │   └── proxmox-setup.md  # Guide setup token API Terraform (Proxmox, AWS, Azure)
 ├── terraform/
-│   ├── modules/vm/          # Module réutilisable — VM Proxmox (clone, CPU, RAM, disk, cloud-init)
+│   ├── modules/vm/          # Module réutilisable : VM Proxmox (clone, CPU, RAM, disk, cloud-init)
 │   └── projects/
 │       ├── k8s-lab/          # 5 VMs : bastion + cluster K3s 3 nodes + DB server
 │       └── monitoring/       # VM Grafana dédiée
