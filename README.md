@@ -28,6 +28,8 @@ Proxmox VE (hyperviseur)
 ## Structure du projet
 ```
 .
+├── docs/
+│   └── proxmox-setup.md  # Guide setup token API Terraform (Proxmox, AWS, Azure)
 ├── terraform/
 │   ├── modules/vm/          # Module réutilisable — VM Proxmox (clone, CPU, RAM, disk, cloud-init)
 │   └── projects/
