@@ -7,7 +7,7 @@
 .terraform.lock.hcl
 
 # Ansible secrets
-ansible/group_vars/all/vault.yml
+ansible/inventory/group_vars/all/vault.yml
 ansible/inventory/hosts.yml
 ansible/inventory.ini
 
